@@ -1,31 +1,27 @@
 const express=require("express");
+const authRoutes=require("./routes/authRoutes.js")
+const profileRoutes=require("./routes/profileRoutes.js")
+const connectionRoutes=require("./routes/connectionRoutes.js")
+const userRouter=require("./routes/userRoutes.js")
+const cookieParser = require("cookie-parser");
+
 const dbConnection = require("./db.js");
-const User=require("./model/user.js")
+const dns = require("dns");
+
+dns.setServers(["8.8.8.8"]);
+
 
 const app=express();
 
-app.use("/hello",async(req,res)=>{
+
+app.use(express.json());
+app.use(cookieParser());
 
 
-const user={
-    name:"aman",
-    email:"amanredao950@gmail.com",
-    phoneNumber:"1234567891",
-    password:"testing this "
-}
-
-const response=await User.create(user);
-console.log("User saved succesfully :",response)
+app.use("/",authRoutes,profileRoutes,connectionRoutes,userRouter)
 
 
 
-
-
-res.send(response)
-
-
-
-});
 
 
 
