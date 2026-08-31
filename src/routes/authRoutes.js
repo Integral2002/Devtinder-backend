@@ -51,7 +51,7 @@ authRoutes.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      throw new Error("Invalid Crential");
+      throw new Error("Invalid Credential");
     }
     const user = await User.findOne({ email: email });
 
@@ -64,12 +64,21 @@ authRoutes.post("/login", async (req, res) => {
     if (IsAuthenticatedUser) {
       const token = user.getJwt();
 
+const userResponse = {
+  _id: user._id,
+  name: user.name,
+  email: user.email,
+  phoneNumber: user.phoneNumber,
+  profile_url: user.profile_url,
+  skills: user.skills,
+};
+
       res
         .cookie("token", token, {
           maxAge: 24 * 60 * 60 * 1000,
           httpOnly: true,
-        })
-        .send("Login Sucessfully");
+        }).status(200)
+        .send(userResponse);
     } else throw new Error("Invalid Credential");
   } catch (error) {
     res.status(400).send("Error :" + error.message);

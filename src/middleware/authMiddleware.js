@@ -24,7 +24,9 @@ next();
 
 } catch (error) {
 
-        res.status(401).send("Authentication failed : "+error.message);
+        res.status(401).json({
+            message:"Unauthorized"
+        });
     
 }
 
