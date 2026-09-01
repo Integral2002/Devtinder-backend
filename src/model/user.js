@@ -21,6 +21,11 @@ phoneNumber:{
     required:[true,"Phone Number is required"],
     unique:true
 },
+
+about:{
+type:String,
+
+},
 password:String,
 skills:[String],
 profile_url:{

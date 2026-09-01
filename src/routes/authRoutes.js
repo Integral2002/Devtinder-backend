@@ -11,7 +11,7 @@ authRoutes.post("/signup", async (req, res) => {
   try {
     const isUser = isValidUser(req.body);
 
-    const { name, email, mobileNo, profile_url, skills } = req.body;
+    const { name, email, mobileNo, profile_url, skills,about } = req.body;
 
     const inputPassword = req.body?.password;
 
@@ -38,6 +38,22 @@ authRoutes.post("/signup", async (req, res) => {
     }
 
     user.skills = skills;
+
+ if (about !== undefined) {
+  if (typeof about !== "string") {
+    throw new Error("About must be a string");
+  }
+
+  if (about.trim().length === 0) {
+    throw new Error("About cannot be empty");
+  }
+
+  if (about.length > 500) {
+    throw new Error("About cannot exceed 500 characters");
+  }
+
+  user.about = about.trim();
+}
 
     const response = await User.create(user);
 
