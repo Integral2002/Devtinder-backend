@@ -25,9 +25,34 @@ userRouter.get("/user/connections", authMiddleware,async (req, res) => {
         { toUserId: req.user._id, status: "accepted" },
         { fromUserId: req.user._id, status: "accepted" },
       ],
-    }).select("_id").populate([{path:"fromUserId",select:"name email profile_url _id"}]);
+    }).select("_id fromUserId toUserId").populate([{path:"fromUserId",select:"name email profile_url _id"},
+      {
+          path: "toUserId",
+          select: "name email profile_url _id",
+        },
+    ]);
 
-    res.status(200).json({ data: connections });
+  const result = connections.map((connection) => {
+      let user;
+
+      if (
+        connection.fromUserId._id.toString() ===
+        req.user._id.toString()
+      ) {
+        user = connection.toUserId;
+      } else {
+        user = connection.fromUserId;
+      }
+
+      return {
+        _id: connection._id,
+        user: user,
+      };
+    });
+
+
+
+    res.status(200).json({ data: result });
   } catch (error) {
     res.status(401).send("Error " + error.message);
   }
@@ -69,7 +94,7 @@ try {
  const NotAllowedUsersInFeedArray=Array.from(NotAllowedUsersInFeed)
 const AllowedUsersinFeed= await User.find({
     _id:{$nin:NotAllowedUsersInFeedArray}
-}).select(" name _id skills profile_url ")
+}).select(" name _id skills profile_url about")
 
 res.status(200).json({
     data:AllowedUsersinFeed

@@ -46,7 +46,7 @@ status:status,
 
 
 
-res.status(200).send(`${req.user.name} is ${status} in ${user.name}`)
+res.status(200).json({message:`${req.user.name} is ${status} in ${user.name}`})
 
 } catch (error) {
 
