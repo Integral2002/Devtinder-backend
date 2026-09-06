@@ -55,6 +55,25 @@ authRoutes.post("/signup", async (req, res) => {
   user.about = about.trim();
 }
 
+const existingUser = await User.findOne({
+  $or: [
+    { email: email },
+    { phoneNumber: mobileNo }
+  ]
+});
+
+if (existingUser) {
+
+  if (existingUser.email === email) {
+    return res.status(400).send("Email already registered");
+  }
+
+  if (existingUser.phoneNumber === mobileNo) {
+    return res.status(400).send("Mobile number already registered");
+  }
+}
+
+
     const response = await User.create(user);
 
     res.send("User saved successfully");
