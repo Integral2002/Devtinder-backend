@@ -7,11 +7,25 @@ const cookieParser = require("cookie-parser");
 const cors =require("cors")
 const dbConnection = require("./db.js");
 const dns = require("dns");
+const http = require("http");
+const {intializeSocket}=require("./utils/intiliazeSocket.js")
+require("dotenv").config();
+
+
+
+
 
 dns.setServers(["8.8.8.8"]);
 
 
+
+
 const app=express();
+const server=http.createServer(app)
+
+intializeSocket(server);
+
+
 
  app.use(
   cors({
@@ -35,7 +49,7 @@ app.use("/",authRoutes,profileRoutes,connectionRoutes,userRouter)
 dbConnection().then(
     ()=>{
 
-app.listen(5000,(req,res)=>{
+server.listen(5000,(req,res)=>{
 
 console.log("server start listening on port 5000")
 
